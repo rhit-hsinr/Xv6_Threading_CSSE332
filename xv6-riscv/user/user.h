@@ -26,7 +26,7 @@ int spoon(void*);
 
 // add for threading
 int clone(void (*)(void*), void*, void*);
-int join(int);
+int join(int, void**);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -44,3 +44,7 @@ void free(void*);
 int atoi(const char*);
 int memcmp(const void *, const void *, uint);
 void *memcpy(void *, const void *, uint);
+
+// add for threading
+int uspork_create(void(*)(void*), void*, void*);
+int usport_join(int, void**);

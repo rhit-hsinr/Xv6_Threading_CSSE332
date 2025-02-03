@@ -696,9 +696,9 @@ int clone(void (*func)(void*), void *arg, void *stack)
   return 666;
 }
 
-int join(int pid)
+int join(int pid, void **stack)
 {
-  printf("join has been called with pid: %d\n", pid);
+  printf("join has been called with pid: %d, stack addr: %p\n", stack);
   printf("This call has not been implemented yet!\n");
   return 0;
 }

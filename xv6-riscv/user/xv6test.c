@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
   int thread_arg = 10;
   spoon((void*)p);
   int pid = clone(thread_fn, &thread_arg, stack);
-  join(pid);
+  join(pid, &stack);
   free(stack);
   exit(0);
 }

@@ -145,3 +145,15 @@ memcpy(void *dst, const void *src, uint n)
 {
   return memmove(dst, src, n);
 }
+
+int
+uspork_create(void(*func)(void*), void *arg, void *stack)
+{
+  return clone(func, arg, stack);
+}
+
+int
+uspork_join(int pid, void **stack)
+{
+  return join(pid, stack);
+}

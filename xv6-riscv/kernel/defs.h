@@ -109,7 +109,7 @@ void            procdump(void);
 uint64		spoon(void*);
 
 int 		clone(void (*)(void*), void*, void*);
-int 		join(int);
+int 		join(int, void**);
 
 // swtch.S
 void            swtch(struct context*, struct context*);
