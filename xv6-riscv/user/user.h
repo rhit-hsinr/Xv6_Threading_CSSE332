@@ -24,6 +24,10 @@ int sleep(int);
 int uptime(void);
 int spoon(void*);
 
+// add for threading
+int clone(void (*)(void*), void*, void*);
+int join(int);
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

@@ -688,3 +688,17 @@ uint64 spoon(void *arg)
   printf("In spoon system call with argument %p\n", arg);
   return 0;
 }
+
+int clone(void (*func)(void*), void *arg, void *stack)
+{
+  printf("clone has been called: %p, argument: %p, stack: %p\n", func, arg, stack);
+  printf("This call has not been implemented yet!\n");
+  return 666;
+}
+
+int join(int pid)
+{
+  printf("join has been called with pid: %d\n", pid);
+  printf("This call has not been implemented yet!\n");
+  return 0;
+}
