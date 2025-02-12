@@ -23,3 +23,4 @@
 #define SYS_spoon  22
 #define SYS_clone  23
 #define SYS_join   24
+#define SYS_texit  25

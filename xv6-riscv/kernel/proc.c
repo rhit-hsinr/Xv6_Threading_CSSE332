@@ -747,3 +747,9 @@ int join(int pid, void **stack)
   printf("This call has not been implemented yet!\n");
   return 0;
 }
+
+int texit(void) {
+
+
+  return 0;
+}

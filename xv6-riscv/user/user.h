@@ -27,6 +27,7 @@ int spoon(void*);
 // add for threading
 int clone(void (*)(void*), void*, void*);
 int join(int, void**);
+int texit(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -39,3 +39,4 @@ entry("uptime");
 entry("spoon");
 entry("clone");
 entry("join");
+entry("texit");

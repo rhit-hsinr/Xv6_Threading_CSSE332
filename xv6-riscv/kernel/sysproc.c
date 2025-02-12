@@ -123,3 +123,9 @@ sys_join(void)
 
   return join((int) pid, (void**) stack);
 }
+
+uint64
+sys_texit(void)
+{
+  return texit(void);
+}
