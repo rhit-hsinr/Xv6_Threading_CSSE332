@@ -127,5 +127,5 @@ sys_join(void)
 uint64
 sys_texit(void)
 {
-  return texit(void);
+  return texit();
 }

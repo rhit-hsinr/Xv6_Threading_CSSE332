@@ -330,7 +330,7 @@ fork(void)
 void
 reparent(struct proc *p)
 {
-  struct proc *pp;clon
+  struct proc *pp;
 
   for(pp = proc; pp < &proc[NPROC]; pp++){
     if(pp->parent == p){
@@ -691,6 +691,8 @@ uint64 spoon(void *arg)
 
 int clone(void (*func)(void*), void *arg, void *stack)
 {
+  printf("clone has been called: %p, argument: %p, stack: %p\n", func, arg, stack);
+
   int i, pid;
   struct proc *np;
   struct proc *p = myproc();
@@ -701,6 +703,7 @@ int clone(void (*func)(void*), void *arg, void *stack)
   }
 
   // Copy user memory from parent to child.
+  
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
     freeproc(np);
     release(&np->lock);
@@ -711,8 +714,19 @@ int clone(void (*func)(void*), void *arg, void *stack)
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
-  // Cause fork to return 0 in the child.
-  np->trapframe->a0 = 0;
+  // set argument for the thread
+  np->trapframe->a0 = (uint64)arg;
+  
+  // set return address to thread function
+  np->trapframe->ra = (uint64)func;
+  //np->trapframe->ra = (uint64)func;
+
+  // set up new stack :((
+  uint64 nstack = (uint64)stack;
+  np->trapframe->sp = nstack;
+
+  // flag that the thread is a thread
+  np->isThread = 1;
 
   // increment reference counts on open file descriptors.
   for(i = 0; i < NOFILE; i++)
@@ -733,11 +747,9 @@ int clone(void (*func)(void*), void *arg, void *stack)
   acquire(&np->lock);
   np->state = RUNNABLE;
   release(&np->lock);
+  
 
   return pid;
-  
-  //printf("clone has been called: %p, argument: %p, stack: %p\n", func, arg, stack);
-  //printf("This call has not been implemented yet!\n");
   //return 666;
 }
 
