@@ -1,0 +1,34 @@
+---
+title: Project Milestone 2
+Author(s): Richard Hsin, Ben Werdmann, Reilly Mooney
+Date: 2/13/2025
+---
+
+High level description
+======================
+
+We have added two kernel system calls and two user functions. The two kernel system calls are called clone and join while the two user functions are called uspork_create and uspork_join.
+
+1. The clone function is used for process creation and essentially imitating a lightweight thread being implemented.
+2. The join function is to safely join the thread in the future to avoid memory leaks etc.
+
+The user function allows the user to do a system call through the user function by creating a wrapper around the system calls.
+
+Thread creation
+================
+
+
+
+Stack separation
+================
+
+Describe how your threads gets assigned different stacks (even though they are
+still in separate address spaces for now).
+
+Test cases
+===========
+
+- Describe the test case you used for the creation of the threads.
+
+Addition comments
+==================
