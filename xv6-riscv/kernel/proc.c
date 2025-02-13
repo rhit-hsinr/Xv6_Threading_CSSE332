@@ -691,7 +691,8 @@ uint64 spoon(void *arg)
 
 int clone(void (*func)(void*), void *arg, void *stack)
 {
-  printf("clone has been called: %p, argument: %p, stack: %p\n", func, arg, stack);
+  //int num = *(int*) arg;
+  //printf("clone has been called: %p, argument: %d, stack: %p\n", func, num, stack);
 
   int i, pid;
   struct proc *np;
@@ -718,7 +719,7 @@ int clone(void (*func)(void*), void *arg, void *stack)
   np->trapframe->a0 = (uint64)arg;
   
   // set return address to thread function
-  np->trapframe->ra = (uint64)func;
+  np->trapframe->epc = (uint64)func;
   //np->trapframe->ra = (uint64)func;
 
   // set up new stack :((

@@ -17,7 +17,9 @@ The user function allows the user to do a system call through the user function 
 Thread creation
 ================
 
-
+1. The thread is being created in the kernel space where the clone function will take in 3 arguments. The first one being the thread function, second the argument, and third is a pre-malloced stack. The stack will be generated in the userspace function to lessen the burden of the user to malloc each time they want to create thread. The userspace function will have an extra integer argument that can specify the size of the stack.
+2. The register that is responsible for influencing where the thread starts will be the epc. 
+3. The threads are currently being exited through bruteforce by using exit(0). This will be changed later on to prevent all threads from collapsing due to the exiting of one single thread. A new system call will be created so that the user can exit a thread when need by calling the system call.
 
 Stack separation
 ================
@@ -25,10 +27,17 @@ Stack separation
 Describe how your threads gets assigned different stacks (even though they are
 still in separate address spaces for now).
 
+1. The stacks are malloced separatedly and calculated so that the sp will be at the top of the stack going down.
+2. The stacks are allocated in the userspace function but not directly visible to the user's eyes.
+3. The sp of the newly created stack will be assigned to the sp of the trapframe inside the new thread.
+
 Test cases
 ===========
 
 - Describe the test case you used for the creation of the threads.
 
+1. I created a random thread function that takes an argument and prints it out. We used the userspace function to create two threads and then sleep for 2 seconds to allow the thread to run. By putting print statements before and after the clone, we can see that the two threads are running the moment they are created.
+
 Addition comments
 ==================
+Why did you name the arbitrary system call spoon? Is it because of fork?
