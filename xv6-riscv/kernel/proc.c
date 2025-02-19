@@ -689,6 +689,8 @@ uint64 spoon(void *arg)
   return 0;
 }
 
+
+
 int clone(void (*func)(void*), void *arg, void *stack)
 {
   //int num = *(int*) arg;
@@ -756,8 +758,43 @@ int clone(void (*func)(void*), void *arg, void *stack)
 
 int join(int pid, void **stack)
 {
-  printf("join has been called with pid: %d, stack addr: %p\n", stack);
-  printf("This call has not been implemented yet!\n");
+  printf("join has been called with pid: %d, stack addr: %p\n", stack); 
+  struct proc *pp;
+  struct proc *p = myproc();
+
+  int pid_found = -1;
+  //uint64 user_stack;
+
+  acquire(&wait_lock);
+
+  for(;;)
+  {
+    pid_found = -1;
+    for (pp = proc; pp < &proc[NPROC]; pp++)
+    {
+      if (pp->pid == pid) {
+	acquire(&pp->lock);
+	if (pp->state == ZOMBIE) {
+	  pid_found = pp->pid;
+	  /*
+	  user_stack = pp->trapframe->sp;
+	  if (stack) {
+	    *stack = (void*)(user_stack - PGSIZE);
+	  }
+	  */
+	  printf("from join i gotchu gng pid: %d\n", pid_found);
+	  freeproc(pp);
+	  release(&pp->lock);
+	  release(&wait_lock);
+	  return pid_found;
+	}
+	release(&pp->lock);
+      }
+    }
+    //printf("i gotchu gng pid: %d\n", pp->pid);
+    sleep(p, &wait_lock);
+  }
+
   return 0;
 }
 

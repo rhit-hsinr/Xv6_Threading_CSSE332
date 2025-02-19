@@ -14,12 +14,13 @@ void thread_fn(void* arg) {
   global_counter++;
   int num = *(int*) arg;
   printf("hello from thread with argument: %d\n", num);
-  printf("global counter from thread: %d\n", global_counter);
+  //printf("global counter from thread: %d\n", global_counter);
+  sleep(20);
   exit(0);
 }
 
 void *create_stack(int sz) {
-  return malloc(sz) + PGSIZE;
+  return malloc(sz) + sz;
 }
 
 int main(int argc, char *argv[]) {
@@ -33,8 +34,10 @@ int main(int argc, char *argv[]) {
   int pid = uspork_create(thread_fn, &thread_arg, stack1);
   int pid2 = uspork_create(thread_fn, &thread_arg2, stack2);
   sleep(3);
-  join(pid, &stack1);
-  join(pid2, &stack2);
+  int rpid = uspork_join(pid, &stack1);
+  int rpid2 = uspork_join(pid2, &stack2);
+  printf("do you got me gng pid: %d\n", rpid);
+  printf("do you rlly got me gng pid: %d\n", rpid2);
   free(stack1 - PGSIZE);
   free(stack2 - PGSIZE);
   printf("global counter: %d\n", global_counter);
