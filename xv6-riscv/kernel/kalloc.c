@@ -9,10 +9,17 @@
 #include "riscv.h"
 #include "defs.h"
 
+#define MAXFRAMES (PHYSTOP - KERNBASE)/PGSIZE
+#define FRINDEX(pa) ((uint64)pa - KERNBASE)/PGSIZE
+
+int ref_count[MAXFRAMES];	
+
 void freerange(void *pa_start, void *pa_end);
 
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
+
+static int init = 0;
 
 struct run {
   struct run *next;
@@ -28,6 +35,7 @@ kinit()
 {
   initlock(&kmem.lock, "kmem");
   freerange(end, (void*)PHYSTOP);
+  init = 1;
 }
 
 void
@@ -39,6 +47,18 @@ freerange(void *pa_start, void *pa_end)
     kfree(p);
 }
 
+void inc_ref(uint64 pa) {
+  acquire(&kmem.lock);
+  ref_count[FRINDEX(pa)] = ref_count[FRINDEX(pa)] + 1;
+  release(&kmem.lock);
+}
+
+void dec_ref(uint64 pa) {
+  acquire(&kmem.lock);
+  ref_count[FRINDEX(pa)] = ref_count[FRINDEX(pa)] - 1;
+  release(&kmem.lock);
+}
+
 // Free the page of physical memory pointed at by pa,
 // which normally should have been returned by a
 // call to kalloc().  (The exception is when
@@ -48,18 +68,37 @@ kfree(void *pa)
 {
   struct run *r;
 
+  if (init == 0) {
+    // Fill with junk to catch dangling refs.
+    memset(pa, 1, PGSIZE);
+
+    r = (struct run*)pa;
+
+    acquire(&kmem.lock);
+    r->next = kmem.freelist;
+    kmem.freelist = r;
+    release(&kmem.lock);
+    return;
+  }
   if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
     panic("kfree");
 
-  // Fill with junk to catch dangling refs.
-  memset(pa, 1, PGSIZE);
-
-  r = (struct run*)pa;
+  dec_ref((uint64) pa);
 
   acquire(&kmem.lock);
-  r->next = kmem.freelist;
-  kmem.freelist = r;
+  int counts = ref_count[FRINDEX(pa)];
   release(&kmem.lock);
+
+  if (counts <= 0) {
+    memset(pa, 1, PGSIZE);
+
+    r = (struct run*)pa;
+
+    acquire(&kmem.lock);
+    r->next = kmem.freelist;
+    kmem.freelist = r;
+    release(&kmem.lock);
+  }
 }
 
 // Allocate one 4096-byte page of physical memory.
@@ -72,6 +111,7 @@ kalloc(void)
 
   acquire(&kmem.lock);
   r = kmem.freelist;
+  ref_count[FRINDEX((uint64)r)] = ref_count[FRINDEX((uint64)r)] + 1;
   if(r)
     kmem.freelist = r->next;
   release(&kmem.lock);

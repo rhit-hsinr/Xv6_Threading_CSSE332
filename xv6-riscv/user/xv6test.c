@@ -14,8 +14,8 @@ void thread_fn(void* arg) {
   global_counter++;
   int num = *(int*) arg;
   printf("hello from thread with argument: %d\n", num);
-  //printf("global counter from thread: %d\n", global_counter);
-  sleep(20);
+  printf("global counter from thread: %d\n", global_counter);
+  sleep(5);
   exit(0);
 }
 
@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
   int thread_arg2 = 11;
   spoon((void*)p);
   int pid = uspork_create(thread_fn, &thread_arg, stack1);
+  sleep(3);
   int pid2 = uspork_create(thread_fn, &thread_arg2, stack2);
   sleep(3);
   int rpid = uspork_join(pid, &stack1);

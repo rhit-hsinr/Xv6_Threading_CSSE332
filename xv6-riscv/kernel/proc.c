@@ -18,6 +18,9 @@ struct spinlock pid_lock;
 extern void forkret(void);
 static void freeproc(struct proc *p);
 
+struct list_head runq;
+struct spinlock runq_lock;
+
 extern char trampoline[]; // trampoline.S
 
 // helps ensure that wakeups of wait()ing
@@ -49,6 +52,8 @@ procinit(void)
 {
   struct proc *p;
   
+  init_list_head(&runq);
+  initlock(&runq_lock, "runq");
   initlock(&pid_lock, "nextpid");
   initlock(&wait_lock, "wait_lock");
   for(p = proc; p < &proc[NPROC]; p++) {
@@ -707,7 +712,7 @@ int clone(void (*func)(void*), void *arg, void *stack)
 
   // Copy user memory from parent to child.
   
-  if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
+  if(copypasta_taishi(p->pagetable, np->pagetable, p->sz) < 0){
     freeproc(np);
     release(&np->lock);
     return -1;
@@ -730,6 +735,10 @@ int clone(void (*func)(void*), void *arg, void *stack)
 
   // flag that the thread is a thread
   np->isThread = 1;
+
+  acquire(&runq_lock);
+  list_add_tail(&runq, &np->runq_list);
+  release(&runq_lock);
 
   // increment reference counts on open file descriptors.
   for(i = 0; i < NOFILE; i++)
@@ -791,7 +800,6 @@ int join(int pid, void **stack)
 	release(&pp->lock);
       }
     }
-    //printf("i gotchu gng pid: %d\n", pp->pid);
     sleep(p, &wait_lock);
   }
 
