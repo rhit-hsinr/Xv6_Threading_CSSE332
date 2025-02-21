@@ -181,6 +181,7 @@ int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
 
 int		copypasta_taishi(pagetable_t, pagetable_t, uint64);
+uint64		cooked_alloc(struct proc *, uint64 oldsz, uint64 newsz, int xperm);
 
 // plic.c
 void            plicinit(void);

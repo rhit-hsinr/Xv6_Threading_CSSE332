@@ -5,6 +5,8 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
+#include "spinlock.h"
+#include "proc.h"
 
 /*
  * the kernel's page table.
@@ -468,7 +470,7 @@ err:
   uvmunmap(new, 0, i / PGSIZE, 1);
   return -1;
 }
-/*
+
 uint64 cooked_alloc (struct proc* p, uint64 oldsz, uint64 newsz, int xperm) {
   char *mem;
   uint64 a;
@@ -489,6 +491,7 @@ uint64 cooked_alloc (struct proc* p, uint64 oldsz, uint64 newsz, int xperm) {
     struct list_head* head = &p->runq_list;
 
     while(head != &p->runq_list) {
+      printf("hello from cooked_alloc\n");
       pp = (struct proc*)head;
       if (mappages(pp->pagetable, a, PGSIZE, (uint64)mem, PTE_R | PTE_U | xperm) != 0) {
 	kfree(mem);
@@ -501,4 +504,4 @@ uint64 cooked_alloc (struct proc* p, uint64 oldsz, uint64 newsz, int xperm) {
   }
   return newsz;
 }
-*/
+

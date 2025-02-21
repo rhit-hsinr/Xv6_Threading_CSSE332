@@ -264,12 +264,13 @@ userinit(void)
 int
 growproc(int n)
 {
-  /*
+  
   uint64 sz;
   struct proc *p = myproc();
 
   sz = p->sz;
   if(n > 0){
+    
     if((sz = uvmalloc(p->pagetable, sz, sz + n, PTE_W)) == 0) {
       return -1;
     }
@@ -277,8 +278,7 @@ growproc(int n)
     sz = uvmdealloc(p->pagetable, sz, sz + n);
   }
   p->sz = sz;
-  return 0;
-  */
+  
   /*
   uint64 sz;
   struct proc *p = myproc();
@@ -292,7 +292,7 @@ growproc(int n)
     sz = uvmdealloc(p->pagetable, sz, sz + n);
   }
   */
-
+  /*
   uint64 sz;
   acquire(&runq_lock);
   for (struct list_head *top = runq.next; top != &runq; top = top->next) {
@@ -310,11 +310,13 @@ growproc(int n)
       sz = uvmdealloc(p->pagetable, sz, sz + n);
     }
     p->sz = sz;
-    printf("hi");
+    printf("hi\n");
   }
   release(&runq_lock);
+  */
   //p->sz = sz;
   return 0;
+  
     
 }
 
@@ -757,6 +759,8 @@ int clone(void (*func)(void*), void *arg, void *stack)
     return -1;
   }
   np->sz = p->sz;
+
+  np->parent = p;
 
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
