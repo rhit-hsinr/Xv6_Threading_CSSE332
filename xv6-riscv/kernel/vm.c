@@ -468,3 +468,37 @@ err:
   uvmunmap(new, 0, i / PGSIZE, 1);
   return -1;
 }
+/*
+uint64 cooked_alloc (struct proc* p, uint64 oldsz, uint64 newsz, int xperm) {
+  char *mem;
+  uint64 a;
+  struct proc* pp;
+
+  if (newsz < oldsz)
+    return oldsz;
+
+  oldsz = PGROUNDUP(oldsz);
+  for (a = oldsz; a < newsz; a += PGSIZE) {
+    mem = kalloc();
+    if (mem == 0) {
+      uvmdealloc(p->pagetable, a, oldsz);
+      return 0;
+    }
+    memset(mem, 0, PGSIZE);
+
+    struct list_head* head = &p->runq_list;
+
+    while(head != &p->runq_list) {
+      pp = (struct proc*)head;
+      if (mappages(pp->pagetable, a, PGSIZE, (uint64)mem, PTE_R | PTE_U | xperm) != 0) {
+	kfree(mem);
+	uvmdealloc(pp->pagetable, a, oldsz);
+	return 0;
+      }
+      pp->sz = newsz;
+      head = head->next;
+    }
+  }
+  return newsz;
+}
+*/

@@ -264,6 +264,7 @@ userinit(void)
 int
 growproc(int n)
 {
+  /*
   uint64 sz;
   struct proc *p = myproc();
 
@@ -277,6 +278,44 @@ growproc(int n)
   }
   p->sz = sz;
   return 0;
+  */
+  /*
+  uint64 sz;
+  struct proc *p = myproc();
+  sz = p->sz;
+
+  if (n > 0) {
+    if ((sz = uvmalloc(p->pagetable, sz, sz + n, PTE_W)) == 0) {
+      return -1;
+    }
+  } else if (n < 0) {
+    sz = uvmdealloc(p->pagetable, sz, sz + n);
+  }
+  */
+
+  uint64 sz;
+  acquire(&runq_lock);
+  for (struct list_head *top = runq.next; top != &runq; top = top->next) {
+    struct proc *p = (struct proc*)top;
+    
+    sz = p->sz;
+
+    if (n > 0) {
+      if ((sz = uvmalloc(p->pagetable, sz, sz + n, PTE_W)) == 0) {
+        release(&runq_lock); 
+        return -1; 
+      }
+    } 
+    else if (n < 0) {
+      sz = uvmdealloc(p->pagetable, sz, sz + n);
+    }
+    p->sz = sz;
+    printf("hi");
+  }
+  release(&runq_lock);
+  //p->sz = sz;
+  return 0;
+    
 }
 
 // Create a new process, copying the parent.
