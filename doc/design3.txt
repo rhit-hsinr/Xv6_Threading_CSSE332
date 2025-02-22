@@ -1,0 +1,63 @@
+---
+Title: Project Milestone 3
+Author(s): Richard Hsin, Reilly Mooney, Ben Werdmann
+Date: 2/21/2025
+---
+
+High level description
+======================
+
+We have added two kernel system calls and two user functions. The two kernel system calls are called clone and join while the two user functions are called 
+uspork_create and uspork_join.
+
+uspork_create()
+uspork_join()
+
+1. The clone function is used for process creation and essentially imitating a lightweight thread being implemented.
+2. The join function is to safely join the thread in the future to avoid memory leaks etc.
+
+The user function allows the user to do a system call through the user function by creating a wrapper around the system calls.
+
+Memory is shared between threads.
+
+The user is responsile for stack creation and managment. 
+
+Thread creation
+================
+
+1. The thread is being created in the kernel space where the clone function will take in 3 arguments. The first one being the thread function, second the argument, 
+   and third is a pre-malloced stack. The stack will be generated in the userspace function to lessen the burden of the user to malloc each time they want to create 
+   thread. The userspace function will have an extra integer argument that can specify the size of the stack.
+2. The register that is responsible for influencing where the thread starts will be the epc. 
+3. The threads are currently being exited through bruteforce by using exit(0). This will be changed later on to prevent all threads from collapsing due to the exiting 
+   of one single thread. A new system call will be created so that the user can exit a thread when need by call.
+
+Memory sharing
+===============
+
+Describe how you have implemented the sharing of the address space in this
+milestone, including answers to any questions in the description above.
+
+Test cases
+===========
+
+- Describe the test case you used for the creation of the threads.
+
+- Describe the test case you used for testing shared memory between threads.
+
+
+1. I created a random thread function that takes an argument and prints it out. We used the userspace function to create two threads and then sleep for 2 seconds 
+   to allow the thread to run. By putting print statements before and after the clone, we can see that the two threads are running the moment they are created.
+
+
+Additional comments
+==================
+
+Add any addition comments, questions, or design decisions that you are
+considering for the final submission.
+
+Grade
+======
+
+The grade you believe should be assigned to your group, with some argument as
+to why you chose that grade.
