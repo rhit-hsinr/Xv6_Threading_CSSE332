@@ -838,7 +838,7 @@ int join(int pid, void **stack)
 	  freeproc(pp);
 	  release(&pp->lock);
 	  release(&wait_lock);
-	  return pid_found;
+	  return 0;
 	}
 	release(&pp->lock);
       }
@@ -846,7 +846,7 @@ int join(int pid, void **stack)
     sleep(p, &wait_lock);
   }
 
-  return 0;
+  return 999;
 }
 
 int texit(void) {
