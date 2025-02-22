@@ -51,13 +51,18 @@ Test cases
 
 The user tests are simple tests to test that our functions and theory actually works. Below are the list of tests that we have. (the first letters are lower case)
 -	Xv6test
-o	This is the simplest test of all. Just a create and a join for some threads. This allows us to know that at least the most simple thread creation and thread joining works. This test case works perfectly.
+o	This is the simplest test of all. Just a create and a join for some threads. This allows us to know that at least the most simple thread creation and thread joining 
+    works. This test case works perfectly.
 -	Sharedmem
-o	By adding a global variable to increment, two different threads and also just another of the same thread should all be able to access the global variable. Since concurrency locks are not implemented in this project, sleep is used to avoid any concurrency issues. This test case works perfectly.
+o	By adding a global variable to increment, two different threads and also just another of the same thread should all be able to access the global variable. Since 
+    concurrency locks are not implemented in this project, sleep is used to avoid any concurrency issues. This test case works perfectly.
 -	Sbrktest
-o	This test case makes a thread call sbrk(4096), which allocates another page when it is a thread already. The test case for this exists since the change has been done to growproc and another function was created to help with the new growproc, but unfortunately it does not work. This test case did not succeed.
+o	This test case makes a thread call sbrk(4096), which allocates another page when it is a thread already. The test case for this exists since the change has been 
+    done to growproc and another function was created to help with the new growproc, but unfortunately it does not work. This test case did not succeed.
 -	Gracefulexit
-o	This test case is just an extra to show that all the threads can be joined even when waiting for a long time. This test case creates threads and lets the thread print statements. After all the thread have joined, a final print statement inside the main process will check if all of the threads have been joined and exited gracefully by checking the return values. This test case works perfectly.
+o	This test case is just an extra to show that all the threads can be joined even when waiting for a long time. This test case creates threads and lets the thread 
+    print statements. After all the thread have joined, a final print statement inside the main process will check if all of the threads have been joined and exited 
+    gracefully by checking the return values. This test case works perfectly.
  
 
 
@@ -72,4 +77,10 @@ Grade
 The grade you believe should be assigned to your group, with some argument as
 to why you chose that grade.
 
-We believe that we deserve a 90% for our grade. Results are important, but the process of learning through the materials and understanding them is important as well. We have successfully completed milestone 1 and milestone 2 flawlessly without any issues. Milestone 3 was also mostly complete except for the dynamic memory allocation. However, failing to dynamically allocate memory wasn't due to us not having tried to tackle the problem, but we just ran out of time. We have used up countless hours establishing different functions and modifying existing functions to solve the issue, but it wasn't enough. Nonetheless, we have learned a lot throughout this whole project and have demonstrated our results all the way till the end despite someone of us having inconvenient situations. We created unique function names, working system calls, simple but extensive tests, and an amazing presentation to showcase our understanding. We believe that our struggle building this project brick by brick from the ground up should be meaningful.
+We believe that we deserve a 90% for our grade. Results are important, but the process of learning through the materials and understanding them is important as well. 
+We have successfully completed milestone 1 and milestone 2 flawlessly without any issues. Milestone 3 was also mostly complete except for the dynamic memory allocation. 
+However, failing to dynamically allocate memory wasn't due to us not having tried to tackle the problem, but we just ran out of time. We have used up countless hours 
+establishing different functions and modifying existing functions to solve the issue, but it wasn't enough. Nonetheless, we have learned a lot throughout this whole 
+project and have demonstrated our results all the way till the end despite someone of us having inconvenient situations. We created unique function names, working system 
+calls, simple but extensive tests, and an amazing presentation to showcase our understanding. We believe that our struggle building this project brick by brick from the 
+ground up should be meaningful.
